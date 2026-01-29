@@ -62,7 +62,7 @@ function Cards(){
     if (getLoading == true) return (<> <p> Loading cards...</p> </>);
 
     return (
-        <>
+        <div id="main">
             <Header score={score} highScore={highScore}/>
             <div style = {{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap:"12px"}}>
                 {getPokemonData.map((e) => (
@@ -72,7 +72,7 @@ function Cards(){
                     </div>
                 ))}
             </div>
-        </>
+        </div>
             
     );
 }
@@ -80,12 +80,12 @@ function Cards(){
 function Header({ score, highScore }){
     return(
         <div className="headerDesign">
-            <h3>
+            <h1>
                 Score: {score}
-            </h3>
-            <h3>
+            </h1>
+            <h1>
                 highScore: {highScore}
-            </h3>
+            </h1>
         </div>
     )
 
