@@ -64,6 +64,7 @@ function Cards(){
     return (
         <div id="main">
             <Header score={score} highScore={highScore}/>
+            <p>This is a memory based game. Your objective is to click on every Pokemon tile at least once without reclicking a tile.</p>
             <div style = {{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap:"12px"}}>
                 {getPokemonData.map((e) => (
                     <div key={e.id} style={{textAlign: "center"}} onClick={() => handleClick(e.id)}>
