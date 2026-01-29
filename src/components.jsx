@@ -5,6 +5,8 @@ function Cards(){
     const [getLoading, setLoading] = useState(true);
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
+    const [clickedCards, setClickedCards] = useState([])
+
 
     useEffect(() => {
         async function fetchPokemonData() {
@@ -28,14 +30,21 @@ function Cards(){
         fetchPokemonData();
     })
 
-    function handleClick(){
-        console.log("Clicked")
-        setScore(score+1);
-        console.log(score);
-        if (score > highScore){
-        setHighScore(score);
-        }
-        console.log(highScore);
+    function handleClick(cardID){
+        setClickedCards(prevClicked => {
+            if(prevClicked.includes(cardID)){
+                setScore(0);
+                return[];
+            }
+        })
+
+        setScore(prevScore => {
+            const newScore = prevScore+1;
+            setHighScore(highScore => Math.max(highScore, newScore));
+            return newScore
+        })
+        return[...prevClicked, cardID]
+
     }
 
     if (getLoading == true) return (<> <p> Data is still loading...</p> </>);
