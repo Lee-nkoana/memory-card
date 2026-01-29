@@ -11,7 +11,7 @@ function Cards(){
     useEffect(() => {
         async function fetchPokemonData() {
             try {
-                const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
+                const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=30");
                 const data = await response.json();
 
                 const details = await Promise.all(
@@ -28,33 +28,45 @@ function Cards(){
             }
         }
         fetchPokemonData();
-    })
+    }, []);
 
-    function handleClick(cardID){
-        setClickedCards(prevClicked => {
-            if(prevClicked.includes(cardID)){
-                setScore(0);
-                return[];
-            }
-        })
-
-        setScore(prevScore => {
-            const newScore = prevScore+1;
-            setHighScore(highScore => Math.max(highScore, newScore));
-            return newScore
-        })
-        return[...prevClicked, cardID]
-
+    const shufflePokemonData = () => {
+        const shuffled = [...getPokemonData];
+        for (let i = shuffled.length - 1; i > 0; i--){
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        setPokemonData(shuffled);
     }
 
-    if (getLoading == true) return (<> <p> Data is still loading...</p> </>);
+    function handleClick(cardID){
+        if (clickedCards.includes(cardID)){
+            setClickedCards([]);
+            setScore(0);
+            shufflePokemonData();
+            return;
+        }
+
+        setClickedCards(prev => [...prev, cardID]);
+
+
+        setScore(prev => {
+            const next = prev + 1;
+            setHighScore(highScore => Math.max(highScore, next));
+            return next;
+        });
+
+        shufflePokemonData();
+    }
+
+    if (getLoading == true) return (<> <p> Loading cards...</p> </>);
 
     return (
         <>
             <Header score={score} highScore={highScore}/>
             <div style = {{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap:"12px"}}>
                 {getPokemonData.map((e) => (
-                    <div key={e.id} style={{textAlign: "center"}} onClick={handleClick}>
+                    <div key={e.id} style={{textAlign: "center"}} onClick={() => handleClick(e.id)}>
                         <img src={e.sprites.front_default} alt={e.name} />
                         <p>{e.name}</p>
                     </div>
